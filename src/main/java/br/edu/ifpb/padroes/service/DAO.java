@@ -7,40 +7,44 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DAO<T>{
+//SoluÁ„o para utilizar a Dependency Inversion do SOLID   
+public class DAO<T> {
 
 	protected String arquivoBanco;
-	
+
 	public DAO(String arquivoBanco) {
-        this.arquivoBanco = arquivoBanco;
-        
-    }
-	 protected Connection connect() {
-		 try (Connection connection = DriverManager.getConnection("jdbc:sqlite:"+this.arquivoBanco)) {
-			 Statement statement = connection.createStatement();
+		this.arquivoBanco = arquivoBanco;
 
-	            //Criando tabela de usu√°rios
-	            statement.execute("CREATE TABLE IF NOT EXISTS USUARIO( ID INTEGER, NOME VARCHAR, LOGIN VARCHAR, SENHA VARCHAR )");
-	            statement.execute("INSERT INTO USUARIO( ID, NOME, LOGIN, SENHA) VALUES (1, 'admin', 'admin', '123')");
+	}
 
-	            //Criando tabela de produtos
-	            statement.execute("CREATE TABLE IF NOT EXISTS USUARIO( ID INTEGER, NOME VARCHAR, LOGIN VARCHAR, SENHA VARCHAR )");
-	            statement.execute("INSERT INTO USUARIO( ID, NOME, LOGIN, SENHA) VALUES (1, 'admin', 'admin', '123')");
+	protected Connection connect() {
+		try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + this.arquivoBanco)) {
+			Statement statement = connection.createStatement();
 
-	            PreparedStatement stmt = connection.prepareStatement("select * from USUARIO");
-	            ResultSet resultSet = stmt.executeQuery();
+			// Criando tabela de usu√°rios
+			statement.execute(
+					"CREATE TABLE IF NOT EXISTS USUARIO( ID INTEGER, NOME VARCHAR, LOGIN VARCHAR, SENHA VARCHAR )");
+			statement.execute("INSERT INTO USUARIO( ID, NOME, LOGIN, SENHA) VALUES (1, 'admin', 'admin', '123')");
 
-	            while (resultSet.next()) {
-	                Integer id = resultSet.getInt("ID");
-	                String nome = resultSet.getString("NOME");
+			// Criando tabela de produtos
+			statement.execute(
+					"CREATE TABLE IF NOT EXISTS USUARIO( ID INTEGER, NOME VARCHAR, LOGIN VARCHAR, SENHA VARCHAR )");
+			statement.execute("INSERT INTO USUARIO( ID, NOME, LOGIN, SENHA) VALUES (1, 'admin', 'admin', '123')");
 
-	                System.out.println( id + " - " + nome);
-	            }
+			PreparedStatement stmt = connection.prepareStatement("select * from USUARIO");
+			ResultSet resultSet = stmt.executeQuery();
 
-	            return connection;
-	        } catch (SQLException e) {
-	            System.out.println(e.getMessage());
-	        }
-	        return null;
-	 }
+			while (resultSet.next()) {
+				Integer id = resultSet.getInt("ID");
+				String nome = resultSet.getString("NOME");
+
+				System.out.println(id + " - " + nome);
+			}
+
+			return connection;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
 }
